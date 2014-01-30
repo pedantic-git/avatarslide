@@ -1,1 +1,9 @@
 /* CSS declarations go here */
+
+img#the_avatar {
+    display: block;
+    width: 48px;
+    height: 48px;
+    border: 1px solid black;
+}
+

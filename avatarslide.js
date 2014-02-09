@@ -4,18 +4,25 @@ if (Meteor.isClient) {
 
   Template.avatar.events({
     'click button#update-button' : function (event) {
-      var screen_name = $('#screen_name').val();
-      console.log(screen_name);
-      Meteor.call('avatar_url', screen_name, function (error, result) {
-	if (!error) {
-	  Session.set('the_avatar_url', result);
-	}
+      var screen_names = $('#screen_names').val().split("\n");
+      console.log(screen_names);
+
+      Session.set('avatars_found', []);
+      $.each(screen_names, function (index, name) {
+	if (name == '') return;
+	Meteor.call('avatar_url', name, function (error, result) {
+	  if (!error) {
+	    var af = Session.get('avatars_found');
+	    af.push({url: result, screen_name: name});
+	    Session.set('avatars_found', af);
+	  }
+	});
       });
     }
   });
 
-  Template.avatar.the_avatar_url = function () {
-    return Session.get('the_avatar_url');
+  Template.avatar.avatars_found = function () {
+    return Session.get('avatars_found');
   };
       
 }

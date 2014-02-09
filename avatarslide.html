@@ -20,13 +20,22 @@
 
 <template name="avatar">
   <div class="row">
-    <div class="col-md-4">
-      <img id="the_avatar" src="{{ the_avatar_url }}">
-    </div>
     <div class="col-md-8">
+      <table class="table table-striped">
+	<thead>
+	  <tr><th>Avatar</th><th>Screen name</th></tr>
+	</thead>
+	<tbody>
+	  {{#each avatars_found}}
+	  <tr><td><img src="{{url}}"></td><td>{{screen_name}}</td></tr>
+	  {{/each}}
+	</tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
       <div class="form-group">
 	<label for="screen_name">Screen name</label>
-	<input type="text" class="form-control" id="screen_name">
+	<textarea class="form-control" id="screen_names" rows="15"></textarea>
       </div>
       <button class="btn btn-default" id="update-button">Update</button>
     </div>

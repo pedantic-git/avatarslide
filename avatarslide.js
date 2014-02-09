@@ -3,8 +3,8 @@ Avatars = new Meteor.Collection("avatars");
 if (Meteor.isClient) {
 
   Template.avatar.events({
-    'change input#screen_name' : function (event) {
-      var screen_name = event.currentTarget.value;
+    'click button#update-button' : function (event) {
+      var screen_name = $('#screen_name').val();
       console.log(screen_name);
       Meteor.call('avatar_url', screen_name, function (error, result) {
 	if (!error) {

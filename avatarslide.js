@@ -1,3 +1,5 @@
+Avatars = new Meteor.Collection("avatars");
+
 if (Meteor.isClient) {
 
   Template.avatar.events({
@@ -34,20 +36,33 @@ if (Meteor.isServer) {
   Meteor.methods({
     avatar_url: function (screen_name) {
       var fut = new Future();
-      Twit.get('users/show', {screen_name: screen_name},
-	       function (err, reply) {
-		 if (err) {
-		   // 34: user doesn't exist
-		   // 63: user has been suspended
-		   if (err.code != 34 && err.code != 63) {
-		     console.log(err);
+
+      var avatar = Avatars.findOne({screen_name: screen_name})
+      if (avatar) {
+	fut['return'](avatar.url);
+      }
+      else {
+	Twit.get('users/show', {screen_name: screen_name},
+		 function (err, reply) {
+		   var url = '';
+		   if (err) {
+		     // 34: user doesn't exist
+		     // 63: user has been suspended
+		     if (err.code != 34 && err.code != 63) {
+		       console.log(err);
+		     }
+		   } else {
+		     url = reply.profile_image_url;
 		   }
-		   fut['return']('');
-		 } else {
-		   fut['return'](reply.profile_image_url);
-		 }
-	       });
-      return fut.wait();
+		   
+		   fut['return'](url);
+		 });
+      }
+      var url = fut.wait();
+      // Add to Avatars
+      Avatars.update({screen_name: screen_name}, {$set: {url: url}},
+		     {upsert: true});
+      return url;
     }
   });
 

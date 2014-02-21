@@ -2,13 +2,19 @@
   "meteor": {},
   "dependencies": {
     "basePackages": {
-      "twit": {}
+      "twit": {},
+      "moment": {}
     },
     "packages": {
       "twit": {
         "git": "https://github.com/subhog/meteor-twit.git",
         "tag": "v0.2.0",
         "commit": "3eb473f9efef8c77ae6a8eb6715fbdf93c4d87c0"
+      },
+      "moment": {
+        "git": "https://github.com/acreeger/meteor-moment.git",
+        "tag": "v2.5.1",
+        "commit": "8c9bc5d3fc96705057737cb9743d555417f6e551"
       }
     }
   }

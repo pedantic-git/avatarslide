@@ -5,12 +5,13 @@ if (Meteor.isClient) {
   Template.avatar.events({
     'click button#update-button' : function (event) {
       var screen_names = $('#screen_names').val().split("\n");
+      var force        = $('#force').is(':checked');
       console.log(screen_names);
 
       Session.set('avatars_found', []);
       $.each(screen_names, function (index, name) {
 	if (name == '') return;
-	Meteor.call('avatar_url', name, function (error, result) {
+	Meteor.call('avatar_url', name, force, function (error, result) {
 	  if (!error) {
 	    var af = Session.get('avatars_found');
 	    af.push({url: result, screen_name: name});
@@ -41,11 +42,15 @@ if (Meteor.isServer) {
   });
 
   Meteor.methods({
-    avatar_url: function (screen_name) {
+    avatar_url: function (screen_name, force) {
       var fut = new Future();
 
       var avatar = Avatars.findOne({screen_name: screen_name})
-      if (avatar) {
+      if (!force &&
+	  avatar && 
+	  avatar.timestamp && 
+	  // Always refresh avatars that are more than 2 days old
+	  moment(avatar.timestamp).isAfter(moment().subtract('days', 2))) {
 	fut['return'](avatar.url);
       }
       else {
@@ -67,7 +72,8 @@ if (Meteor.isServer) {
       }
       var url = fut.wait();
       // Add to Avatars
-      Avatars.update({screen_name: screen_name}, {$set: {url: url}},
+      Avatars.update({screen_name: screen_name},
+		     {$set: {url: url, timestamp: moment()}},
 		     {upsert: true});
       return url;
     }

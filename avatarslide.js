@@ -3,6 +3,14 @@ Avatars = new Meteor.Collection("avatars");
 if (Meteor.isClient) {
 
   Template.avatar.events({
+    'click #config a' : function (event) {
+      event.preventDefault();
+      $(this).tab('show');
+    },
+    'click #slide a' : function (event) {
+      event.preventDefault();
+      $(this).tab('show');
+    },
     'click button#update-button' : function (event) {
       var screen_names = $('#screen_names').val().split("\n");
       var force        = $('#force').is(':checked');
@@ -17,6 +25,22 @@ if (Meteor.isClient) {
 	    Session.set('avatars_found', af);
 	  }
 	});
+      });
+    }
+  });
+
+  Template.slide.rendered = function () {
+    Canvas = new fabric.Canvas('slide-canvas');
+    console.log(Canvas);
+  };
+
+  Template.slide.events({
+    'click button#refresh-slide' : function (event) {
+      Canvas.clear();
+      $('#avatars-table img').each(function (index) {
+	var img = new fabric.Image(this, {left: index*48, top: 0});
+	console.log(img);
+	Canvas.add(img);
       });
     }
   });

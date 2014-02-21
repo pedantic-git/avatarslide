@@ -2,6 +2,7 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/flatly/bootstrap.min.css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
   <title>avatarslide</title>
 </head>
 
@@ -14,20 +15,31 @@
   </div>
 
   <div class="container">
-    {{> avatar}}
+    <ul class="nav nav-tabs">
+      <li class="active"><a href="#config" data-toggle="tab">Config</a></li>
+      <li><a href="#slide" data-toggle="tab">Slide</a></li>
+    </ul>
+
+    <div class="tab-content">
+      <div class="tab-pane active" id="config">
+	{{> avatar}}
+      </div>
+      <div class="tab-pane" id="slide">
+	{{> slide}}
+      </div>
   </div>
 </body>
 
 <template name="avatar">
   <div class="row">
     <div class="col-md-8">
-      <table class="table table-striped">
+      <table id="avatars-table" class="table table-striped">
 	<thead>
 	  <tr><th>Avatar</th><th>Screen name</th></tr>
 	</thead>
 	<tbody>
 	  {{#each avatars_found}}
-	  <tr><td><img src="{{url}}"></td><td>{{screen_name}}</td></tr>
+	  <tr><td><img id="img-{{screen_name}}" src="{{url}}"></td><td>{{screen_name}}</td></tr>
 	  {{/each}}
 	</tbody>
       </table>
@@ -43,5 +55,14 @@
       </div>
       <button class="btn btn-default" id="update-button">Update</button>
     </div>
+  </div>
+</template>
+
+<template name="slide">
+  <div class="row">
+    <button class="btn btn-default" id="refresh-slide">Refresh slide</button>
+  </div>
+  <div class="row">
+    <canvas id="slide-canvas" width="800" height="600"></canvas>
   </div>
 </template>

@@ -6,7 +6,6 @@ if (Meteor.isClient) {
     'click button#update-button' : function (event) {
       var screen_names = $('#screen_names').val().split("\n");
       var force        = $('#force').is(':checked');
-      console.log(screen_names);
 
       Session.set('avatars_found', []);
       $.each(screen_names, function (index, name) {

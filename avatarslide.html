@@ -2,19 +2,16 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.0/css/bootstrap.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/flatly/bootstrap.min.css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
+  <script src="fabric.js"></script>
   <title>avatarslide</title>
 </head>
 
 <body>
-  <div class="jumbotron">
-    <div class="container">
-      <h1>Avatarslide</h1>
-      <p>Avatarslide converts a list of Twitter handles to a slide. Woohoo!</p>
-    </div>
-  </div>
-
   <div class="container">
+    <div class="page-header">
+      <h1>Avatarslide</h1>
+    </div>
+
     <ul class="nav nav-tabs">
       <li class="active"><a href="#config" data-toggle="tab">Config</a></li>
       <li><a href="#slide" data-toggle="tab">Slide</a></li>
@@ -32,7 +29,7 @@
 
 <template name="avatar">
   <div class="row">
-    <div class="col-md-8">
+    <div class="col-md-8" id="table-div">
       <table id="avatars-table" class="table table-striped">
 	<thead>
 	  <tr><th>Avatar</th><th>Screen name</th></tr>

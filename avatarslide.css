@@ -1,5 +1,10 @@
 /* CSS declarations go here */
 
 canvas#slide-canvas {
-    border: 1px solid black;
+    border: 1px solid #cccccc;
+}
+
+div#table-div {
+    height: 500px;
+    overflow: auto;
 }

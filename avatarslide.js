@@ -2,34 +2,7 @@ Avatars = new Meteor.Collection("avatars");
 
 if (Meteor.isClient) {
 
-  Template.avatar.events({
-    'click #config a' : function (event) {
-      event.preventDefault();
-      $(this).tab('show');
-    },
-    'click #slide a' : function (event) {
-      event.preventDefault();
-      $(this).tab('show');
-    },
-    'click button#update-button' : function (event) {
-      var screen_names = $('#screen_names').val().split("\n");
-      var force        = $('#force').is(':checked');
-
-      Session.set('avatars_found', []);
-      $.each(screen_names, function (index, name) {
-	name = $.trim(name); // watch out for whitespace
-	if (name == '') return;
-	Meteor.call('avatar_url', name, force, function (error, result) {
-	  if (!error) {
-	    var af = Session.get('avatars_found');
-	    af.push({url: result, screen_name: name});
-	    Session.set('avatars_found', af);
-	  }
-	});
-      });
-    }
-  });
-
+  // Initialize the canvas object properly
   Template.slide.rendered = function () {
     if (!Template.slide.canvas) {
       var canvas = new fabric.Canvas('slide-canvas');
@@ -39,45 +12,43 @@ if (Meteor.isClient) {
   };
 
   Template.slide.events({
-    'click button#refresh-slide' : function (event) {
-      var canvas = Template.slide.canvas;
-      canvas.clear();
-      var sns = $('#avatars-table tr td:nth-child(2)');
-      var total_sns = sns.length;
-      var c_width   = canvas.width;
-      var c_height  = canvas.height;
-      var n_h_steps = Math.floor(Math.sqrt(total_sns));
-      var h_step    = Math.floor(c_height / n_h_steps);
-      var n_w_steps = Math.floor(total_sns / n_h_steps);
-      var w_step    = Math.floor(c_width / n_w_steps);
-      sns.each(function (index) {
-	var sn = this.innerHTML;
+    'click button#clear-button' : function (event) {
+      Template.slide.canvas.clear();
+    },
 
-	var img = new fabric.Image($('#img-'+sn).get(0), {width: 48,
-							  height: 48});
-	var text = new fabric.Text(sn, {fontFamily: 'sans-serif',
-					fontSize: 12,
-					top: 50
-				       });
-	img.set('left', text.width/2-24);
-	var w_steps = index % n_w_steps;
-	var h_steps = Math.floor(index * n_w_steps) % n_h_steps;
-	var left = w_step * w_steps;
-	var top  = h_step * h_steps;
-	
-	var group = new fabric.Group([text, img], {
-	  left: left,
-	  top: top
+    'click button#add-button' : function (event) {
+      var canvas = Template.slide.canvas;
+
+      var screen_names = $('#screen_names').val().split("\n");
+      var force        = $('#force').is(':checked');
+
+      $.each(screen_names, function (index, name) {
+	name = $.trim(name); // watch out for whitespace
+	if (name == '') return;
+	Meteor.call('avatar_url', name, force, function (error, result) {
+	  if (error) {
+	    console.log(error);
+	  }
+	  else {
+	    fabric.Image.fromURL(result, function (img) {
+	      var text = new fabric.Text(name, {fontFamily: 'sans-serif',
+						fontSize: 12,
+						top: 50
+					       });
+	      img.set('left', text.width/2-24);
+	      var group = new fabric.Group([text, img], {
+		left: 0,
+		top: 0
+	      });
+	      canvas.add(group);
+	    });
+	  }
 	});
-	canvas.add(group);
       });
+      
+      $('#screen_names').val(''); // Clear the box for more entry
     }
   });
-
-  Template.avatar.avatars_found = function () {
-    return Session.get('avatars_found');
-  };
-      
 }
 
 if (Meteor.isServer) {

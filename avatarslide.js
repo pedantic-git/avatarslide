@@ -17,6 +17,7 @@ if (Meteor.isClient) {
 				 originY: 'center',
 				 top: canvas.height/2,
 				 left: canvas.width/2});
+      canvas.setBackgroundColor('#ffffff');
       Template.slide.fte = fte;
       canvas.add(Template.slide.fte);
       Template.slide.canvas = canvas;      
@@ -101,6 +102,18 @@ if (Meteor.isClient) {
 					  });
       canvas.add(text);
       $('#title-input').val(''); // Clear input
+    },
+
+    'click button#save-button' : function (event) {
+      var canvas = Template.slide.canvas;
+      var blob = new Blob([canvas.toSVG()], {type: 'image/svg+xml'});
+      saveAs(blob, 'avatarslide.svg');
+      // FIXME: Can't save as PNG unless we untaint (locally mirror)
+      // the images when we import them.
+      // var canvasEl = $('canvas#slide-canvas').get()[0]
+      // canvasEl.toBlob(function (blob) {
+      // 	saveAs(blob, 'avatarslide.png');
+      // });
     }
   });
 }

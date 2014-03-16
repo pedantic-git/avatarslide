@@ -33,7 +33,7 @@ if (Meteor.isClient) {
 	    fabric.Image.fromURL(result, function (img) {
 	      var text = new fabric.Text(name, {fontFamily: 'sans-serif',
 						fontSize: 12,
-						top: 50
+						top: 50,
 					       });
 	      img.set('left', text.width/2-24);
 	      var group = new fabric.Group([text, img], {
@@ -47,6 +47,20 @@ if (Meteor.isClient) {
       });
       
       $('#screen_names').val(''); // Clear the box for more entry
+    },
+
+    'click button#title-add-button' : function (event) {
+      var canvas = Template.slide.canvas;
+      var title  = $('#title-input').val();
+      var text   = new fabric.Text(title, {fontFamily: 'sans-serif',
+					   fontSize: 64,
+					   originX: 'center',
+					   originY: 'center',
+					   top: canvas.height / 2,
+					   left: canvas.width / 2
+					  });
+      canvas.add(text);
+      $('#title-input').val(''); // Clear input
     }
   });
 }

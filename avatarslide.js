@@ -106,14 +106,12 @@ if (Meteor.isClient) {
 
     'click button#save-button' : function (event) {
       var canvas = Template.slide.canvas;
-      var blob = new Blob([canvas.toSVG()], {type: 'image/svg+xml'});
-      saveAs(blob, 'avatarslide.svg');
-      // FIXME: Can't save as PNG unless we untaint (locally mirror)
-      // the images when we import them.
-      // var canvasEl = $('canvas#slide-canvas').get()[0]
-      // canvasEl.toBlob(function (blob) {
-      // 	saveAs(blob, 'avatarslide.png');
-      // });
+      canvas.discardActiveGroup();
+      canvas.discardActiveObject();
+      var canvasEl = $('canvas#slide-canvas').get()[0]
+      canvasEl.toBlob(function (blob) {
+      	saveAs(blob, 'avatarslide.png');
+      });
     }
   });
 }
@@ -146,7 +144,6 @@ if (Meteor.isServer) {
       else {
 	Twit.get('users/show', {screen_name: screen_name},
 		 function (err, reply) {
-		   var url = '';
 		   if (err) {
 		     // 34: user doesn't exist
 		     // 63: user has been suspended
@@ -154,10 +151,27 @@ if (Meteor.isServer) {
 		       console.log(err);
 		     }
 		   } else {
-		     url = reply.profile_image_url;
+		     var true_url = reply.profile_image_url;
+
+		     // Now fetch it and convert to a data: URL. This
+		     // stops us from tainting the canvas with CORS
+		     // errors that will prevent us saving it.
+		     var request = Npm.require('request');
+		     request.get({uri: true_url, encoding: 'base64'},
+				 function (error, res, body) {
+				   if (error) {
+				     console.log(error);
+				   }
+				   else if (res.statusCode != 200) {
+				     console.log("Status "+res.statusCode+" when fetching "+true_url);
+				   }
+				   else {
+				     url = 'data:image/*;base64,'+body;
+				     console.log(url);
+				     fut['return'](url);
+				   }
+				 });
 		   }
-		   
-		   fut['return'](url);
 		 });
       }
       var url = fut.wait();

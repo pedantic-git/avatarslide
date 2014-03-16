@@ -3,13 +3,13 @@
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootswatch/3.1.0/flatly/bootstrap.min.css">
   <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.0/js/bootstrap.min.js"></script>
   <script src="fabric.js"></script>
-  <title>avatarslide</title>
+  <title>Avatarslide</title>
 </head>
 
 <body>
   <div class="container">
     <div class="page-header">
-      <h1>Avatarslide</h1>
+      <h1>Avatarslide <span class="small pull-right">Presenting: The Audience</span></h1>
     </div>
 
     {{> slide}}
@@ -30,13 +30,13 @@
   <div class="row">
     <div class="col-md-4">
       <div class="form-group">
-	<label for="screen_name">Add screen name(s)</label>
+	<label for="screen_name">Add Twitter screen name(s)</label>
 	<button class="btn btn-success pull-right" id="add-button"><span class="glyphicon glyphicon-plus"></span></button>
 	<textarea class="form-control" id="screen_names" rows="4"></textarea>
       </div>
       <div class="form-group">
 	<input type="checkbox" id="force">
-	<label for="force">Force refresh of all avatars?</label>
+	<label for="force">Force refresh of added avatars?</label>
       </div>
     </div>
     <div class="col-md-4">

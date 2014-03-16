@@ -6,7 +6,19 @@ if (Meteor.isClient) {
   Template.slide.rendered = function () {
     if (!Template.slide.canvas) {
       var canvas = new fabric.Canvas('slide-canvas');
-      canvas.on('after:render', function(){canvas.calcOffset();});
+      canvas.on('after:render', function(){
+	canvas.calcOffset();
+      });
+      var fte = new fabric.Text("This is your Avatarslide canvas.\nAdd Twitter screen names and title text below to begin.",
+				{fontFamily: 'sans-serif',
+				 fontSize: 24,
+				 textAlign: 'center',
+				 originX: 'center',
+				 originY: 'center',
+				 top: canvas.height/2,
+				 left: canvas.width/2});
+      Template.slide.fte = fte;
+      canvas.add(Template.slide.fte);
       Template.slide.canvas = canvas;      
     }
   };
@@ -18,6 +30,8 @@ if (Meteor.isClient) {
 
     'click button#add-button' : function (event) {
       var canvas = Template.slide.canvas;
+
+      canvas.remove(Template.slide.fte); // If it's still there
 
       var screen_names = $('#screen_names').val().split("\n");
       var force        = $('#force').is(':checked');
@@ -59,6 +73,8 @@ if (Meteor.isClient) {
 
     'click button#title-add-button' : function (event) {
       var canvas = Template.slide.canvas;
+      canvas.remove(Template.slide.fte); // If it's still there
+
       var title  = $('#title-input').val();
       var text   = new fabric.Text(title, {fontFamily: 'sans-serif',
 					   fontSize: 64,

@@ -21,6 +21,22 @@ if (Meteor.isClient) {
       canvas.add(Template.slide.fte);
       Template.slide.canvas = canvas;      
     }
+
+    // Add keyboard commands
+    $(window).on('keydown', function (e) {
+      switch (e.which) {
+	case 46: // DEL
+          if(canvas.getActiveGroup()){
+	    canvas.getActiveGroup().forEachObject(function(o){ 
+	      canvas.remove(o) 
+	    });
+	    canvas.discardActiveGroup().renderAll();
+	  } else {
+	    canvas.remove(canvas.getActiveObject());
+	  }
+	  break;
+      }
+    });
   };
 
   Template.slide.events({

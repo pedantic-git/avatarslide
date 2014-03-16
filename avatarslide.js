@@ -36,9 +36,17 @@ if (Meteor.isClient) {
 						top: 50,
 					       });
 	      img.set('left', text.width/2-24);
+
+	      // Pick a random location on the canvas to insert
+	      // FIXME: Avoid clipping?
+	      var x = Math.floor((Math.random()*(canvas.width-32))+16);
+	      var y = Math.floor((Math.random()*(canvas.height-32))+16);
+
 	      var group = new fabric.Group([text, img], {
-		left: 0,
-		top: 0
+		left: x,
+		top: y,
+		originX: 'center',
+		originY: 'center'
 	      });
 	      canvas.add(group);
 	    });
